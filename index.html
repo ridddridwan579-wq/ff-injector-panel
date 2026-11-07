@@ -1,0 +1,167 @@
+<!DOCTYPE html><html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FF Gaming Panel</title><style>
+*{box-sizing:border-box}
+body{
+ margin:0;
+ background:#090909;
+ color:white;
+ font-family:Arial,sans-serif;
+}
+#panel{
+ position:fixed;
+ top:80px;
+ left:50%;
+ transform:translateX(-50%);
+ width:310px;
+ background:#151515;
+ border:1px solid #ff2929;
+ border-radius:15px;
+ overflow:hidden;
+ box-shadow:0 0 25px #ff222244;
+}
+#top{
+ padding:16px;
+ background:#260909;
+ display:flex;
+ justify-content:space-between;
+ cursor:move;
+}
+#top b{color:#ff3636}
+button{
+ background:#e52b2b;
+ color:white;
+ border:0;
+ padding:10px;
+ border-radius:7px;
+ cursor:pointer;
+}
+.controls button{padding:5px 10px}
+.content{padding:15px}
+.card{
+ background:#202020;
+ padding:13px;
+ border-radius:10px;
+ margin-bottom:12px;
+}
+h3{color:#ff3535;font-size:15px}
+.row{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ padding:10px 0;
+ border-bottom:1px solid #383838;
+ font-size:13px;
+}
+input{accent-color:red}
+select{
+ width:100%;
+ padding:10px;
+ background:#080808;
+ color:white;
+ border:1px solid #444;
+ border-radius:7px;
+}
+.action{width:100%;margin-top:12px}
+.status{color:#00e676;font-size:12px;line-height:1.8}
+#mini{
+ display:none;
+ text-align:center;
+ padding:12px;
+ color:red;
+ cursor:pointer;
+}
+.hidden{display:none}
+</style></head><body><div id="panel"><div id="top">
+<b>FF GAMING PANEL</b>
+<div class="controls">
+<button onclick="minimize()">−</button>
+<button onclick="closePanel()">×</button>
+</div>
+</div><div id="mini" onclick="maximize()">
+FF PANEL ▲
+</div><div class="content" id="content"><div class="card">
+<h3>🎯 AIM DASHBOARD</h3><div class="row">
+Auto Head (Preview)
+<input type="checkbox">
+</div><div class="row">
+Auto Aim (Preview)
+<input type="checkbox">
+</div><div class="row">
+Aim Precision
+<input type="checkbox">
+</div>
+</div><div class="card">
+<h3>⚡ GAME SETTINGS</h3><p>Headshot Sensitivity</p>
+<select id="sens">
+<option>90</option>
+<option>95</option>
+<option>100</option>
+</select><p>FPS Profile</p>
+<select id="fps">
+<option>Normal</option>
+<option>High</option>
+<option>Ultra</option>
+</select><button class="action" onclick="applySettings()">
+SAVE SETTINGS
+</button>
+</div><div class="card">
+<h3>📡 SYSTEM STATUS</h3>
+<div class="status" id="status">
+● PANEL ACTIVE<br>
+● LOCAL PREVIEW<br>
+● SYSTEM READY
+</div>
+</div></div>
+</div><script>
+const panel=document.getElementById("panel");
+const topbar=document.getElementById("top");
+const content=document.getElementById("content");
+const mini=document.getElementById("mini");
+
+function minimize(){
+content.classList.add("hidden");
+mini.style.display="block";
+}
+
+function maximize(){
+content.classList.remove("hidden");
+mini.style.display="none";
+}
+
+function closePanel(){
+panel.style.display="none";
+}
+
+function applySettings(){
+document.getElementById("status").innerHTML=
+"● SETTINGS SAVED<br>"+
+"● SENSITIVITY: "+sens.value+
+"<br>● FPS PROFILE: "+fps.value+
+"<br>● LOCAL PREVIEW";
+}
+
+let drag=false,dx=0,dy=0;
+
+topbar.addEventListener("pointerdown",e=>{
+if(e.target.tagName==="BUTTON")return;
+drag=true;
+let r=panel.getBoundingClientRect();
+dx=e.clientX-r.left;
+dy=e.clientY-r.top;
+topbar.setPointerCapture(e.pointerId);
+});
+
+topbar.addEventListener("pointermove",e=>{
+if(!drag)return;
+panel.style.transform="none";
+panel.style.left=Math.max(0,Math.min(
+innerWidth-panel.offsetWidth,e.clientX-dx))+"px";
+panel.style.top=Math.max(0,e.clientY-dy)+"px";
+});
+
+topbar.addEventListener("pointerup",()=>drag=false);
+</script></body>
+</html>
